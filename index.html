@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貪吃蛇遊戲</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>🐍 質感貪吃蛇 🐍</h1>
+        <div class="game-area">
+            <div id="gameWrapper">
+                <canvas id="gameCanvas" width="400" height="400"></canvas>
+            </div>
+            <div class="game-info">
+                <p>分數: <span id="score">0</span></p>
+                <p>時間: <span id="time">0</span> 秒</p>
+                <button id="startButton">開始遊戲</button>
+            </div>
+        </div>
+
+        <div class="game-over-overlay" id="gameOverOverlay">
+            <div class="game-over-content">
+                <h2>遊戲結束!</h2>
+                <p>你的分數: <span id="finalScore">0</span></p>
+                <p>遊玩時間: <span id="finalTime">0</span> 秒</p>
+                <input type="text" id="playerNameInput" placeholder="請輸入你的名稱 (例如: 史蒂夫)" maxlength="15">
+                <button id="saveScoreButton">儲存分數</button>
+                <button id="restartButton">重新開始</button>
+            </div>
+        </div>
+
+        <div class="leaderboard-section">
+            <h2>🏆 排行榜 🏆</h2>
+            <ul id="leaderboardList">
+                </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

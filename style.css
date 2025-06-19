@@ -1,0 +1,208 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #a8e063, #56ab2f); /* 綠色漸變背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    color: #333;
+    overflow-y: auto; /* 允許垂直滾動，應對內容較多的情況 */
+    overflow-x: hidden; /* 防止水平滾動 */
+    padding: 20px 0; /* 增加上下內邊距，避免內容緊貼邊緣 */
+    box-sizing: border-box; /* 讓 padding 不會增加總寬度 */
+}
+
+.game-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    text-align: center;
+    max-width: 900px;
+    width: 95%; /* 調整為佔據寬度更多，但仍留邊距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px; /* 元素之間的間距 */
+    margin: auto; /* 確保在中央 */
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-area {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap; /* 允許在小螢幕上換行 */
+}
+
+#gameWrapper {
+    /* 為 canvas 提供一個包裹層，用於監聽觸控事件和應用邊框/陰影 */
+    position: relative;
+    width: 400px; /* 確保與 canvas 寬度一致 */
+    height: 400px; /* 確保與 canvas 高度一致 */
+    border: 6px solid #4CAF50; /* 綠色邊框 */
+    border-radius: 12px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    background-color: #ecf0f1; /* 畫布背景色 */
+    /* 確保 canvas 本身不會有額外邊距，讓它完全填充 wrapper */
+    display: flex; /* 讓 canvas 在其中居中 */
+    justify-content: center;
+    align-items: center;
+}
+
+#gameWrapper.game-active {
+    border-color: #27ae60; /* 遊戲進行時的活躍邊框色 */
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), 0 0 20px rgba(76, 175, 80, 0.5);
+}
+
+canvas {
+    display: block; /* 移除 canvas 底部可能存在的額外空間 */
+    background-color: transparent; /* 讓背景色顯示在 wrapper 上 */
+    /* 這裡不再需要邊框和陰影，因為它們已經應用在 gameWrapper 上 */
+}
+
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    background-color: #f7f9fb;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    min-width: 150px; /* 確保資訊區有足夠寬度 */
+    flex-grow: 1; /* 在大螢幕上佔據剩餘空間 */
+}
+
+.game-info p {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+}
+
+.game-info span {
+    color: #e67e22; /* 橙色強調數字 */
+}
+
+button {
+    background-color: #4CAF50; /* 綠色按鈕 */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    outline: none; /* 移除點擊時的藍色邊框 */
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 遊戲結束疊層 */
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden; /* 初始隱藏 */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+.game-over-overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.game-over-content {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    max-width: 90%; /* 防止過寬 */
+}
+
+.game-over-overlay.show .game-over-content {
+    transform: translateY(0);
+}
+
+.game-over-content h2 {
+    color: #e74c3c; /* 紅色強調 */
+    font-size: 2.2em;
+    margin-bottom: 20px;
+}
+
+.game-over-content p {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.game-over-content span {
+    color: #2980b9;
+    font-weight: bold;
+}
+
+#playerNameInput {
+    padding: 10px 15px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1em;
+    margin-top: 15px;
+    width: 80%;
+    max-width: 250px;
+    box-sizing: border-box; /* 包含 padding 和 border 在寬度內 */
+}
+
+#saveScoreButton, #restartButton {
+    margin-top: 20px;
+    margin-left: 10px; /* 兩個按鈕之間的間距 */
+    margin-right: 10px;
+    background-color: #3498db; /* 藍色按鈕 */
+}
+
+#restartButton {
+    background-color: #f39c12; /* 橙色按鈕 */
+}
+
+#saveScoreButton:hover {
+    background-color: #2980b9;
+}
+
+#restartButton:hover {
+    background-color: #e67e22;
+}
+
+/* 排行榜 */
+.leaderboard-section {
+    background-color: #f7f9fb;
+    padding: 25px;
